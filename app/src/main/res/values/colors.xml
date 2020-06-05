@@ -3,5 +3,14 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+
+    <!-- General colors -->
+    <color name="white">#ffffff</color>
     <color name="transparent">#00000000</color>
+
+    <!-- Message related colors -->
+    <color name="messageListBgColor">#9dc183</color>
+    <color name="receivedMessageBgColor">#ffffff</color>
+    <color name="sentMessageBgColor">#008C55</color>
+    <color name="messageSenderColor">#A6A61C</color>
 </resources>
