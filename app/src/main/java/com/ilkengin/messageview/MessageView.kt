@@ -6,12 +6,14 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.*
 import com.ilkengin.messageview.model.Message
+import com.ilkengin.messageview.model.MessageType
 
 class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr) {
 
     private var parentActivity: Activity
     private var chatTitle: String = ""
-    private var messages: Array<Message> = emptyArray()
+    private var messages: MutableList<Message> = mutableListOf()
+    private var listViewAdapter: MessageListAdapter? = null
     private var onMessageSentListener: OnMessageSentListener? = null
 
     init {
@@ -23,10 +25,14 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             this.chatTitle = resources.getText(typedArray.getResourceId(R.styleable.message_view_attributes_chat_title, R.string.chat_title)).toString()
             typedArray.recycle()
         }
-        val sendTextView = findViewById<EditText>(R.id.messageToSend)
+        val sendText = findViewById<EditText>(R.id.messageToSend)
+        val chatTitleView = findViewById<TextView>(R.id.chatTitle)
+        chatTitleView.text = this.chatTitle
         findViewById<ImageButton>(R.id.sendButton).setOnClickListener {  view ->
-            if (!sendTextView.text.isEmpty()) {
-                onMessageSentListener?.onMessageSent(sendTextView.text.toString())
+            if (!sendText.text.isEmpty()) {
+                messages.add(Message(messages.size, "Me", MessageType.SENT, sendText.text.toString()))
+                this.listViewAdapter?.notifyDataSetChanged()
+                onMessageSentListener?.onMessageSent(sendText.text.toString())
             }
         }
         this.parentActivity = context as Activity
@@ -36,7 +42,7 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         this.onMessageSentListener = _onMessageSentListener
     }
 
-    fun setMessages(_messages: Array<Message>) {
+    fun setMessages(_messages: MutableList<Message>) {
         this.messages = _messages
         this.initListView()
     }
@@ -44,13 +50,16 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     private fun initListView() {
         if (this.parentActivity != null) {
             val listView = findViewById<ListView>(R.id.sentMessages)
+            listView.transcriptMode = ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL
+            listView.isStackFromBottom = true
             val messageListAdapter = MessageListAdapter(this.parentActivity, this.messages)
             listView.adapter = messageListAdapter
-
-            listView.setOnItemClickListener(){adapterView, view, position, id ->
+            this.listViewAdapter = messageListAdapter
+            listView.setOnItemLongClickListener {adapterView, view, position, id ->
                 val itemAtPos = adapterView.getItemAtPosition(position)
                 val itemIdAtPos = adapterView.getItemIdAtPosition(position)
                 Toast.makeText(this.context, "Click on item at $itemAtPos its item id $itemIdAtPos", Toast.LENGTH_LONG).show()
+                true
             }
         }
     }
