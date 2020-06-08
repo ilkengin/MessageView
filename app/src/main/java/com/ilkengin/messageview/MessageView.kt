@@ -1,15 +1,18 @@
 package com.ilkengin.messageview
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
 import android.widget.*
 import com.ilkengin.messageview.model.Message
 import com.ilkengin.messageview.model.MessageType
 
-class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : LinearLayout(context, attrs, defStyleAttr), View.OnClickListener {
+class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : LinearLayout(context, attrs, defStyleAttr), View.OnClickListener, AdapterView.OnItemLongClickListener {
 
     private var messages: MutableList<Message> = mutableListOf()
     private var listViewAdapter: MessageListAdapter? = null
@@ -47,6 +50,13 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         }
     }
 
+    override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
+        this.showDialog()
+        this.messages.removeAt(position)
+        this.listViewAdapter?.notifyDataSetChanged()
+        return true
+    }
+
     fun setOnMessageSentListener(_onMessageSentListener: OnMessageSentListener) {
         this.onMessageSentListener = _onMessageSentListener
     }
@@ -58,17 +68,29 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     private fun initListView() {
         val listView = findViewById<ListView>(R.id.sentMessages)
-        listView.transcriptMode = ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL
-        listView.isStackFromBottom = true
-        val messageListAdapter = MessageListAdapter(context as Activity, this.messages)
-        listView.adapter = messageListAdapter
-        this.listViewAdapter = messageListAdapter
-        listView.setOnItemLongClickListener {adapterView, _, position, _ ->
-            val itemAtPos = adapterView.getItemAtPosition(position)
-            val itemIdAtPos = adapterView.getItemIdAtPosition(position)
-            Toast.makeText(this.context, "Click on item at $itemAtPos its item id $itemIdAtPos", Toast.LENGTH_LONG).show()
-            true
+        this.listViewAdapter = MessageListAdapter(context as Activity, this.messages)
+        listView.adapter = this.listViewAdapter
+
+        listView.onItemLongClickListener = this
+    }
+
+    private fun showDialog() {
+        val dialog = Dialog(this.context)
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        dialog.setCancelable(false)
+        dialog.setContentView(R.layout.confirmation_dialog)
+
+        val deleteForMeBtn = dialog.findViewById(R.id.deleteForMeBtn) as Button
+        val deleteForEveryoneBtn = dialog.findViewById(R.id.deleteForEverybodyBtn) as Button
+        val cancelBtn = dialog.findViewById(R.id.cancelBtn) as TextView
+        deleteForMeBtn.setOnClickListener {
+            dialog.dismiss()
         }
+        deleteForEveryoneBtn.setOnClickListener {
+            dialog.dismiss()
+        }
+        cancelBtn.setOnClickListener { dialog.dismiss() }
+        dialog.show()
     }
 
     interface OnMessageSentListener {
