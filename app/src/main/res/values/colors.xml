@@ -6,6 +6,7 @@
 
     <!-- General colors -->
     <color name="white">#ffffff</color>
+    <color name="dark_gray">#464236</color>
     <color name="transparent">#00000000</color>
 
     <!-- Message related colors -->
@@ -13,4 +14,7 @@
     <color name="receivedMessageBgColor">#ffffff</color>
     <color name="sentMessageBgColor">#008C55</color>
     <color name="messageSenderColor">#A6A61C</color>
+
+    <!-- Dialog colors -->
+    <color name="confirmationDialogTextColor">#95AF2F</color>
 </resources>
