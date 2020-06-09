@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.Window
 import android.widget.*
+import com.ilkengin.messageview.model.DeleteType
 import com.ilkengin.messageview.model.Message
 import com.ilkengin.messageview.model.MessageType
 
@@ -17,6 +18,7 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     private var messages: MutableList<Message> = mutableListOf()
     private var listViewAdapter: MessageListAdapter? = null
     private var onMessageSentListener: OnMessageSentListener? = null
+    private var onMessageDeletedListener: OnMessageDeletedListener? = null
 
     init {
         LayoutInflater.from(context).inflate(R.layout.message_view, this, true)
@@ -30,8 +32,12 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             val typedArray = context.obtainStyledAttributes(it, R.styleable.message_view_attributes, 0, 0)
 
             val chatTitle = typedArray.getString(R.styleable.message_view_attributes_chat_title)
+            val background = typedArray.getDrawable(R.styleable.message_view_attributes_chat_background)
             if (!chatTitle.isNullOrEmpty()) {
                 chatTitleView.text = chatTitle
+            }
+            if (background != null) {
+                rootView.background = background
             }
 
             typedArray.recycle()
@@ -53,14 +59,16 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     }
 
     override fun onItemLongClick(parent: AdapterView<*>, view: View, position: Int, id: Long): Boolean {
-        this.showDialog()
-        this.messages.removeAt(position)
-        this.listViewAdapter?.notifyDataSetChanged()
+        this.showDeleteMessageDialog(this.messages.get(position))
         return true
     }
 
     fun setOnMessageSentListener(_onMessageSentListener: OnMessageSentListener) {
         this.onMessageSentListener = _onMessageSentListener
+    }
+
+    fun setOnMessageDeletedListener(_onMessageDeletedListener: OnMessageDeletedListener) {
+        this.onMessageDeletedListener = _onMessageDeletedListener
     }
 
     fun setMessages(_messages: MutableList<Message>) {
@@ -76,7 +84,7 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         listView.onItemLongClickListener = this
     }
 
-    private fun showDialog() {
+    private fun showDeleteMessageDialog(deletedMsg: Message) {
         val dialog = Dialog(this.context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
@@ -86,9 +94,15 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         val deleteForEveryoneBtn = dialog.findViewById(R.id.deleteForEverybodyBtn) as Button
         val cancelBtn = dialog.findViewById(R.id.cancelBtn) as TextView
         deleteForMeBtn.setOnClickListener {
+            this.onMessageDeletedListener?.onMessageDeleted(deletedMsg, DeleteType.DeleteForMe)
+            this.messages.remove(deletedMsg)
+            this.listViewAdapter?.notifyDataSetChanged()
             dialog.dismiss()
         }
         deleteForEveryoneBtn.setOnClickListener {
+            this.onMessageDeletedListener?.onMessageDeleted(deletedMsg, DeleteType.DeleteForEveryone)
+            this.messages.remove(deletedMsg)
+            this.listViewAdapter?.notifyDataSetChanged()
             dialog.dismiss()
         }
         cancelBtn.setOnClickListener { dialog.dismiss() }
@@ -97,5 +111,9 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     interface OnMessageSentListener {
         fun onMessageSent(message: String)
+    }
+
+    interface OnMessageDeletedListener {
+        fun onMessageDeleted(message: Message, deleteType: DeleteType)
     }
 }
