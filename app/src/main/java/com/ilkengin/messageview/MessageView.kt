@@ -29,8 +29,10 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(it, R.styleable.message_view_attributes, 0, 0)
 
-            val chatTitle = resources.getText(typedArray.getResourceId(R.styleable.message_view_attributes_chat_title, R.string.chat_title)).toString()
-            chatTitleView.text = chatTitle
+            val chatTitle = typedArray.getString(R.styleable.message_view_attributes_chat_title)
+            if (!chatTitle.isNullOrEmpty()) {
+                chatTitleView.text = chatTitle
+            }
 
             typedArray.recycle()
         }
