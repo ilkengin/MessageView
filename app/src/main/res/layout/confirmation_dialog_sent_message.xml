@@ -3,11 +3,14 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_gray">
+    android:background="@color/dark_gray"
+    android:paddingHorizontal="5dp"
+    android:paddingTop="10dp">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/confirmation_dialog_text"/>
+        android:text="@string/confirmation_dialog_text"
+        android:textColor="@color/white"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +19,7 @@
         <Button
             android:id="@+id/deleteForMeBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:text="@string/confirmation_dialog_delete_for_me_btn_text"
             android:textColor="@color/confirmationDialogTextColor"
             android:background="@color/transparent"
@@ -24,7 +27,7 @@
         <Button
             android:id="@+id/cancelBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:text="@string/confirmation_dialog_cancel_btn_text"
             android:textColor="@color/confirmationDialogTextColor"
             android:background="@color/transparent"
@@ -32,7 +35,7 @@
         <Button
             android:id="@+id/deleteForEverybodyBtn"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:text="@string/confirmation_dialog_delete_for_everybody_btn_text"
             android:textColor="@color/confirmationDialogTextColor"
             android:background="@color/transparent"

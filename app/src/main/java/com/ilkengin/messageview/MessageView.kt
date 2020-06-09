@@ -88,10 +88,20 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
         val dialog = Dialog(this.context)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
-        dialog.setContentView(R.layout.confirmation_dialog)
+        if (deletedMsg.type == MessageType.SENT) {
+            dialog.setContentView(R.layout.confirmation_dialog_sent_message)
+            val deleteForEveryoneBtn = dialog.findViewById(R.id.deleteForEverybodyBtn) as Button
+            deleteForEveryoneBtn.setOnClickListener {
+                this.onMessageDeletedListener?.onMessageDeleted(deletedMsg, DeleteType.DeleteForEveryone)
+                this.messages.remove(deletedMsg)
+                this.listViewAdapter?.notifyDataSetChanged()
+                dialog.dismiss()
+            }
+        } else {
+            dialog.setContentView(R.layout.confirmation_dialog_received_message)
+        }
 
         val deleteForMeBtn = dialog.findViewById(R.id.deleteForMeBtn) as Button
-        val deleteForEveryoneBtn = dialog.findViewById(R.id.deleteForEverybodyBtn) as Button
         val cancelBtn = dialog.findViewById(R.id.cancelBtn) as TextView
         deleteForMeBtn.setOnClickListener {
             this.onMessageDeletedListener?.onMessageDeleted(deletedMsg, DeleteType.DeleteForMe)
@@ -99,12 +109,7 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
             this.listViewAdapter?.notifyDataSetChanged()
             dialog.dismiss()
         }
-        deleteForEveryoneBtn.setOnClickListener {
-            this.onMessageDeletedListener?.onMessageDeleted(deletedMsg, DeleteType.DeleteForEveryone)
-            this.messages.remove(deletedMsg)
-            this.listViewAdapter?.notifyDataSetChanged()
-            dialog.dismiss()
-        }
+
         cancelBtn.setOnClickListener { dialog.dismiss() }
         dialog.show()
     }
