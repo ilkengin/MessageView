@@ -2,5 +2,6 @@
 <resources>
     <declare-styleable name="message_view_attributes">
         <attr name="chat_title" format="string" />
+        <attr name="chat_background" format="reference" />
     </declare-styleable>
 </resources>
