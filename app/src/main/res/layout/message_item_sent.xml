@@ -23,5 +23,12 @@
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+        <ImageView
+            android:id="@+id/sent_message_delivery_icon"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="right"
+            android:src="@drawable/send_icon"/>
     </LinearLayout>
 </LinearLayout>
