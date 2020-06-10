@@ -27,6 +27,7 @@ class MessageListAdapter(private val context: Activity, private val messages: Mu
             messageTextView.text = messages[position].text
         } else {
             val messageTextView = rowView.findViewById<TextView>(R.id.sent_message_text)
+            val deliveryIcon = rowView.findViewById<ImageView>(R.id.sent_message_delivery_icon)
 
             messageTextView.text = messages[position].text
         }
