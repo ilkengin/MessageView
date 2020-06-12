@@ -10,6 +10,7 @@ import android.view.Window
 import android.widget.*
 import com.ilkengin.messageview.model.DeleteType
 import com.ilkengin.messageview.model.Message
+import com.ilkengin.messageview.model.MessageDeliveryStatus
 import com.ilkengin.messageview.model.MessageType
 
 class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
@@ -49,7 +50,7 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     override fun onClick(v: View?) {
         val sendText = findViewById<EditText>(R.id.messageToSend)
         if (sendText.text.isNotEmpty()) {
-            this.messages.add(Message(messages.size, "Me", MessageType.SENT, sendText.text.toString()))
+            this.messages.add(Message(messages.size, "", MessageType.SENT, MessageDeliveryStatus.SENT, sendText.text.toString()))
             this.listViewAdapter?.notifyDataSetChanged()
             this.onMessageSentListener?.onMessageSent(sendText.text.toString())
 
@@ -69,6 +70,12 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
 
     fun setOnMessageDeletedListener(_onMessageDeletedListener: OnMessageDeletedListener) {
         this.onMessageDeletedListener = _onMessageDeletedListener
+    }
+
+    fun messageStatusChanged(messageId: Int, newStatus: MessageDeliveryStatus) {
+        val message = this.messages.find { message -> message.id == messageId }
+        message?.status = newStatus
+        this.listViewAdapter?.notifyDataSetChanged()
     }
 
     fun setMessages(_messages: MutableList<Message>) {
