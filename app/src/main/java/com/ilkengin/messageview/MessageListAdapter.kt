@@ -24,7 +24,7 @@ class MessageListAdapter(private val context: Activity, private val messages: Mu
             val senderTextView = rowView.findViewById<TextView>(R.id.received_message_sender)
             val messageTextView = rowView.findViewById<TextView>(R.id.received_message_text)
 
-            senderTextView.text = messages[position].senderName
+            senderTextView.text = messages[position].from
             messageTextView.text = messages[position].text
         } else {
             val messageTextView = rowView.findViewById<TextView>(R.id.sent_message_text)
