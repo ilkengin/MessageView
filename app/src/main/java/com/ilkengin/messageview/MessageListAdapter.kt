@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.ilkengin.messageview.model.Message
+import com.ilkengin.messageview.model.MessageDeliveryStatus
 import com.ilkengin.messageview.model.MessageType
 
 class MessageListAdapter(private val context: Activity, private val messages: MutableList<Message>) : ArrayAdapter<Message>(context, R.layout.message_item_received, messages) {
@@ -27,8 +28,17 @@ class MessageListAdapter(private val context: Activity, private val messages: Mu
             messageTextView.text = messages[position].text
         } else {
             val messageTextView = rowView.findViewById<TextView>(R.id.sent_message_text)
-            val deliveryIcon = rowView.findViewById<ImageView>(R.id.sent_message_delivery_icon)
+            val deliveryIconView = rowView.findViewById<ImageView>(R.id.sent_message_delivery_icon)
 
+            val imageResource = if (message.status == MessageDeliveryStatus.SENT) {
+                R.drawable.ic_done
+            } else if (message.status == MessageDeliveryStatus.DELIVERED) {
+                R.drawable.ic_done_all
+            } else {
+                R.drawable.ic_done_all_blue
+            }
+
+            deliveryIconView.setImageResource(imageResource)
             messageTextView.text = messages[position].text
         }
         return rowView
