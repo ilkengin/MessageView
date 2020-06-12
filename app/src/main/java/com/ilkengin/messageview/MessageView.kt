@@ -50,7 +50,7 @@ class MessageView @JvmOverloads constructor(context: Context, attrs: AttributeSe
     override fun onClick(v: View?) {
         val sendText = findViewById<EditText>(R.id.messageToSend)
         if (sendText.text.isNotEmpty()) {
-            this.messages.add(Message(messages.size, sendText.text.toString(), MessageDeliveryStatus.SENT))
+            this.messages.add(Message(messages.size, sendText.text.toString()))
             this.listViewAdapter?.notifyDataSetChanged()
             this.onMessageSentListener?.onMessageSent(sendText.text.toString())
 
