@@ -5,13 +5,12 @@
     android:layout_height="wrap_content"
     android:paddingVertical="5dp"
     android:background="@color/transparent">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:paddingVertical="5dp"
         android:layout_marginLeft="100dp"
-        android:layout_marginRight="10dp"
         android:background="@drawable/sent_message_bg">
         <TextView
             android:id="@+id/sent_message_text"
@@ -21,14 +20,17 @@
             android:textStyle="bold"
             android:textSize="18dp"
             android:layout_marginLeft="15dp"
-            android:layout_marginStart="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
             android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
         <ImageView
             android:id="@+id/sent_message_delivery_icon"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_marginRight="5dp"
-            android:layout_gravity="right"
-            android:src="@drawable/send_icon"/>
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/ic_done"/>
+    </RelativeLayout>
 </LinearLayout>
