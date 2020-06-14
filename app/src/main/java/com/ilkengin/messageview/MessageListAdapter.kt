@@ -37,12 +37,19 @@ class MessageListAdapter(private val context: Activity, private val messages: Mu
         } else {
             val messageTextView = rowView.findViewById<TextView>(R.id.sent_message_text)
 
-            val sentIconImageResourceId = if (message.status == MessageDeliveryStatus.SENT) {
-                R.drawable.ic_done
-            } else if (message.status == MessageDeliveryStatus.DELIVERED) {
-                R.drawable.ic_done_all
-            } else {
-                R.drawable.ic_done_all_blue
+            val sentIconImageResourceId = when (message.status) {
+                MessageDeliveryStatus.SENDING -> {
+                    R.drawable.loading_icon
+                }
+                MessageDeliveryStatus.SENT -> {
+                    R.drawable.ic_done
+                }
+                MessageDeliveryStatus.DELIVERED -> {
+                    R.drawable.ic_done_all
+                }
+                else -> {
+                    R.drawable.ic_done_all_blue
+                }
             }
 
             val ss = SpannableString(message.text)
