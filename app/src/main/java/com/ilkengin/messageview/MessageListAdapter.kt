@@ -1,12 +1,20 @@
 package com.ilkengin.messageview
 
 import android.app.Activity
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.AlignmentSpan
+import android.text.style.ImageSpan
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.ilkengin.messageview.model.Message
 import com.ilkengin.messageview.model.MessageDeliveryStatus
 import com.ilkengin.messageview.model.MessageType
+
 
 class MessageListAdapter(private val context: Activity, private val messages: MutableList<Message>) : ArrayAdapter<Message>(context, R.layout.message_item_received, messages) {
 
@@ -24,13 +32,12 @@ class MessageListAdapter(private val context: Activity, private val messages: Mu
             val senderTextView = rowView.findViewById<TextView>(R.id.received_message_sender)
             val messageTextView = rowView.findViewById<TextView>(R.id.received_message_text)
 
-            senderTextView.text = messages[position].from
-            messageTextView.text = messages[position].text
+            senderTextView.text = message.from
+            messageTextView.text = message.text
         } else {
             val messageTextView = rowView.findViewById<TextView>(R.id.sent_message_text)
-            val deliveryIconView = rowView.findViewById<ImageView>(R.id.sent_message_delivery_icon)
 
-            val imageResource = if (message.status == MessageDeliveryStatus.SENT) {
+            val sentIconImageResourceId = if (message.status == MessageDeliveryStatus.SENT) {
                 R.drawable.ic_done
             } else if (message.status == MessageDeliveryStatus.DELIVERED) {
                 R.drawable.ic_done_all
@@ -38,8 +45,12 @@ class MessageListAdapter(private val context: Activity, private val messages: Mu
                 R.drawable.ic_done_all_blue
             }
 
-            deliveryIconView.setImageResource(imageResource)
-            messageTextView.text = messages[position].text
+            val ss = SpannableString(message.text)
+            val d = ContextCompat.getDrawable(context, sentIconImageResourceId)
+            d?.setBounds(0, 0, d?.intrinsicWidth, d?.intrinsicHeight)
+            val span = ImageSpan(d!!, ImageSpan.ALIGN_BOTTOM)
+            ss.setSpan(span, message.text.length, message.text.length + 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            messageTextView.setText(ss)
         }
         return rowView
     }
