@@ -40,6 +40,40 @@ Step 3. Add MessageView to your layout file
         mv:chat_background="@drawable/my_custom_chat_bg"/>
 ```
 
+## Populating messages
+### Message
+There are two different constructor in Message class: One for received messages and one for sent messages
+
+For sent messages, use:
+```
+Message(
+    _id: Int,
+    _text: String, 
+    [_sentTime: Date = Calendar.getInstance().time,
+    _status: MessageDeliveryStatus = MessageDeliveryStatus.SENDING]
+)
+```
+
+For received messages, use:
+```
+Message(
+    _id: Int,
+    _text: String,
+    _sentTime: Date,
+    _from: String
+)
+```
+
+### MessageDeliveryStatus
+MessageDeliveryStatus is an enum to keep the status of the sent messages. It also helps to show the according icon to the user. Possible values are:
+```
+SENDING
+SENT
+DELIVERED
+READ
+NA
+```
+
 ## How to provide data to the view.
 ```
 class MainActivity : AppCompatActivity(), MessageView.OnMessageSentListener, MessageView.OnMessageDeletedListener {
@@ -73,3 +107,9 @@ class MainActivity : AppCompatActivity(), MessageView.OnMessageSentListener, Mes
     }
 }
 ```
+
+In order to update the status of a sent message, use:
+```
+messageView.messageStatusChanged(messageId, MessageDeliveryStatus.READ) 
+```
+Copyright 2020 Ilkan Engin
