@@ -1,13 +1,24 @@
+apply plugin: 'com.novoda.bintray-release'
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-apply from: 'install.gradle'
-apply from: 'bintray.gradle'
+publish {
+    def groupProjectID = 'com.ilkengin.messageview'
+    def artifactProjectID = 'MessageView'
+    def publishVersionID = '0.1.2'
+
+    userOrg = 'ilkengin'
+    repoName = 'MessageView'
+    groupId = groupProjectID
+    artifactId = artifactProjectID
+    publishVersion = publishVersionID
+    desc = 'Android library written in Kotlin for showing and sending messages'
+    website = 'https://github.com/ilkengin/MessageView'
+}
 
 android {
     compileSdkVersion 29
-
 
     defaultConfig {
         minSdkVersion 23
