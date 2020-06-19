@@ -76,35 +76,33 @@ NA
 
 ## How to provide data to the view.
 ```
-class MainActivity : AppCompatActivity(), MessageView.OnMessageSentListener, MessageView.OnMessageDeletedListener {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val messageView = findViewById<MessageView>(R.id.messageView)
-        messageView.setMessages(
-            mutableListOf(
-                Message(0, "Hello, World!", Calendar.getInstance().time, "Sender"),
-                Message(1, "What's up?", Calendar.getInstance().time, MessageDeliveryStatus.READ)
-            )
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    val messageView = findViewById<MessageView>(R.id.messageView)
+    messageView.setMessages(
+        mutableListOf(
+            Message(0, "Hello, World!", Calendar.getInstance().time, "Sender"),
+            Message(1, "What's up?", Calendar.getInstance().time, MessageDeliveryStatus.READ)
         )
-        messageView.setOnMessageSentListener(this)
-        messageView.setOnMessageDeletedListener(this)
-    }
-    
-    // This method is called whenever a new message is sent by the user
-    override fun onMessageSent(message: String) {
-        Toast.makeText(this,"Message to send: ${message}", Toast.LENGTH_LONG).show()
-    }
-    // This method is called whenever a message is deleted by the user
-    override fun onMessageDeleted(message: Message, deleteType: DeleteType) {
-        val deletedFor = if (deleteType == DeleteType.DeleteForEveryone) { 
-            "everyone"
-        } else { 
-            "me"
+    )
+    val context = this
+    messageView.setOnMessageSentListener(object : MessageView.OnMessageSentListener {
+        // This is called whenever a new message is sent by the user
+        override fun onMessageSent(message: String) {
+            Toast.makeText(context,"Message to send: ${message}", Toast.LENGTH_LONG).show()
         }
-        Toast.makeText(this,"Message deleted: ${message.text} for ${deletedFor}", Toast.LENGTH_LONG).show()
-    }
+    })
+    messageView.setOnMessageDeletedListener(object : MessageView.OnMessageDeletedListener {
+        override fun onMessageDeleted(message: Message, deleteType: DeleteType) {
+            val deletedFor = if (deleteType == DeleteType.DeleteForEveryone) {
+                "everyone"
+            } else {
+                "me"
+            }
+            Toast.makeText(context,"Message deleted: ${message.text} for ${deletedFor}", Toast.LENGTH_LONG).show()
+        }
+    })
 }
 ```
 
