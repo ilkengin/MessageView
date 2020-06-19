@@ -10,7 +10,23 @@ Android library written in Kotlin for showing and sending messages
 - Customizing background
 
 ## How to integrate the library in your app?
+Step 1: Add it in your root build.gradle at the end of repositories:
 
+```
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
+```
+Step 2. Add the dependency
+
+```
+dependencies {
+    implementation 'com.github.ilkengin:MessageView:0.1.2'
+}
+```
+Step 3. Add MessageView to your layout file
 ```
  <com.ilkengin.messageview.MessageView
         android:id="@+id/messageView"
@@ -25,7 +41,6 @@ Android library written in Kotlin for showing and sending messages
 ```
 
 ## How to provide data to the view.
-
 ```
 class MainActivity : AppCompatActivity(), MessageView.OnMessageSentListener, MessageView.OnMessageDeletedListener {
 
